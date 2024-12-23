@@ -1,0 +1,33 @@
+{
+  "name": "node_learning",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon projects/node-basics/app.js",
+    "dev": "nodemon projects/node-basics/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LucaHermann/Node.git"
+  },
+  "keywords": [
+    "node",
+    "express",
+    "mongodb",
+    "mongoose",
+    "rest",
+    "api",
+    "learning"
+  ],
+  "author": "lhermann",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LucaHermann/Node/issues"
+  },
+  "homepage": "https://github.com/LucaHermann/Node#readme",
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
