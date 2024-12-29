@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon assignements/third-assignement/app.js",
-    "dev": "nodemon assignements/third-assignement/app.js"
+    "start": "nodemon projects/dynamic-content-&-templates/app.js",
+    "dev": "nodemon projects/dynamic-content-&-templates/app.js"
   },
   "repository": {
     "type": "git",
