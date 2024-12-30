@@ -3,13 +3,10 @@ const path = require('path');
 
 const rootDir = require('../util/path');
 
+const productsFilePath = path.join(rootDir, 'data', 'products.json');
+
 const getProductsFromFile = (cb) => {
-  const filePath = path.join(
-    rootDir,
-    'data',
-    'products.json'
-  );
-  fs.readFile(filePath, (err, fileContent) => {
+  fs.readFile(productsFilePath, (err, fileContent) => {
     let products = [];
     if (!err && fileContent.length > 0) {
       try {
@@ -28,10 +25,9 @@ module.exports = class Product {
   }
 
   save() {
-    const filePath = path.join(rootDir, 'data', 'products.json');
     getProductsFromFile((products) => {
       products.push(this);
-      fs.writeFile(filePath, JSON.stringify(products), (err) => {
+      fs.writeFile(productsFilePath, JSON.stringify(products), (err) => {
         if (err) {
           console.error('Error writing to products.json:', err);
         }
