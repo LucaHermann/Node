@@ -82,3 +82,17 @@ exports.getCheckout = (req, res, next) => {
     pageTitle: 'Checkout'
   });
 };
+
+exports.postUpdateCartQuantity = (req, res, next) => {
+  const prodId = req.body.productId;
+  const quantity = parseInt(req.body.quantity);
+
+  if (quantity < 1) {
+    return res.redirect('/cart');
+  }
+
+  Product.findById(prodId, product => {
+    Cart.updateQuantity(prodId, quantity, product.price);
+    res.redirect('/cart');
+  });
+};

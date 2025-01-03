@@ -1,5 +1,6 @@
 <%- include('../includes/head.ejs') %>
     <link rel="stylesheet" href="/css/product.css">
+    <link rel="stylesheet" href="/css/cart.css">
     </head>
 
     <body>
@@ -7,17 +8,47 @@
         <main>
             <% if (products.length > 0) { %>
                 <ul class="cart__item-list">
+                    <% let totalPrice = 0 %>
                     <% products.forEach(p => { %>
+                        <% totalPrice += p.price * p.qty %>
                         <li class="cart__item">
-                            <h1><%= p.title %></h1>
-                            <h2>Quantity: <%= p.qty %></h2>
-                            <form action="/cart-delete-item" method="POST">
+                            <div class="cart__item-info">
+                                <h1><%= p.title %></h1>
+                                <div class="cart__item-details">
+                                    <span class="cart__item-price">$<%= p.price %> each</span>
+                                    <form class="cart__item-quantity" action="/cart-update-quantity" method="POST">
+                                        <label for="qty-<%= p.id %>">Quantity:</label>
+                                        <input
+                                            type="number"
+                                            id="qty-<%= p.id %>"
+                                            name="quantity"
+                                            value="<%= p.qty %>"
+                                            min="1"
+                                            aria-label="Product quantity"
+                                        >
+                                        <input type="hidden" name="productId" value="<%= p.id %>">
+                                        <button class="btn" type="submit">Update</button>
+                                    </form>
+                                    <span class="cart__item-subtotal">
+                                        Subtotal: $<%= (p.price * p.qty).toFixed(2) %>
+                                    </span>
+                                </div>
+                            </div>
+                            <form class="cart__item-delete" action="/cart-delete-item" method="POST">
                                 <input type="hidden" name="productId" value="<%= p.id %>">
-                                <button class="btn danger" type="submit">Delete</button>
+                                <button class="btn danger" type="submit" aria-label="Delete item">
+                                    Delete
+                                </button>
                             </form>
                         </li>
                     <% }) %>
                 </ul>
+                <div class="cart__total">
+                    <h2>Total: $<%= totalPrice.toFixed(2) %></h2>
+                    <form action="/create-order" method="POST">
+                        <button type="submit" class="btn">Order Now</button>
+                    </form>
+                </div>
             <% } else { %>
                 <h1>No Products in Cart!</h1>
             <% } %>

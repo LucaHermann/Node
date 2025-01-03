@@ -70,4 +70,25 @@ module.exports = class Cart {
       }
     });
   }
+
+  static updateQuantity(id, newQty, productPrice) {
+    fs.readFile(p, (err, fileContent) => {
+      if (err) {
+        return;
+      }
+      const cart = JSON.parse(fileContent);
+      const product = cart.products.find(prod => prod.id === id);
+      if (!product) {
+        return;
+      }
+
+      const oldQty = product.qty;
+      product.qty = newQty;
+      cart.totalPrice = cart.totalPrice - oldQty * productPrice + newQty * productPrice;
+
+      fs.writeFile(p, JSON.stringify(cart), err => {
+        console.log(err);
+      });
+    });
+  }
 };
