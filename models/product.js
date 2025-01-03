@@ -9,10 +9,13 @@ const p = path.join(
 
 const getProductsFromFile = cb => {
   fs.readFile(p, (err, fileContent) => {
-    if (err) {
-      cb([]);
-    } else {
+    if (err || fileContent.length === 0) {
+      return cb([]);
+    }
+    try {
       cb(JSON.parse(fileContent));
+    } catch (error) {
+      cb([]);
     }
   });
 };
@@ -32,13 +35,16 @@ module.exports = class Product {
         const existingProductIndex = products.findIndex(prod => prod.id === this.id);
         const updatedProducts = [...products];
         updatedProducts[existingProductIndex] = this;
+        fs.writeFile(p, JSON.stringify(updatedProducts), err => {
+          console.log(err);
+        });
       } else {
         this.id = Math.random().toString();
         products.push(this);
+        fs.writeFile(p, JSON.stringify(products), err => {
+          console.log(err);
+        });
       }
-      fs.writeFile(p, JSON.stringify(products), err => {
-        console.log(err);
-      });
     });
   }
 
@@ -50,6 +56,17 @@ module.exports = class Product {
     getProductsFromFile(products => {
       const product = products.find(p => p.id === id);
       cb(product);
+    });
+  }
+
+  static deleteById(id, cb) {
+    getProductsFromFile(products => {
+      const updatedProducts = products.filter(prod => prod.id !== id);
+      fs.writeFile(p, JSON.stringify(updatedProducts), err => {
+        if (err) {
+          console.log(err);
+        }
+      });
     });
   }
 };
