@@ -11,10 +11,10 @@
 - ✅ Enhanced Data Models
 - ✅ Dynamic Product Management
 - ✅ Shopping Cart Functionality
+- ✅ SQL Integration (MySQL)
 
 ### 🔜 Coming Soon
 
-- SQL Integration (MySQL)
 - Sequelize ORM
 - MongoDB Integration
 - Mongoose ODM
