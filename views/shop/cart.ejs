@@ -15,7 +15,7 @@
                             <div class="cart__item-info">
                                 <h1><%= p.title %></h1>
                                 <div class="cart__item-details">
-                                    <span class="cart__item-price">$<%= p.price %> each</span>
+                                    <span class="cart__item-price">$<%= p.price.toFixed(2) %> each</span>
                                     <form class="cart__item-quantity" action="/cart-update-quantity" method="POST">
                                         <label for="qty-<%= p.id %>">Quantity:</label>
                                         <input
