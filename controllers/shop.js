@@ -1,8 +1,16 @@
 const Product = require('../models/product');
 const Cart = require('../models/cart');
+const User = require('../models/user');
 
 exports.getProducts = (req, res, next) => {
-  Product.findAll()
+  Product.findAll({
+    include: [
+      {
+        model: User,
+        required: true,
+      },
+    ],
+  })
     .then(products => {
       res.render('shop/product-list', {
         prods: products,
