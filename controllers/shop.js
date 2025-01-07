@@ -2,14 +2,10 @@ const Product = require('../models/product');
 const Cart = require('../models/cart');
 const User = require('../models/user');
 
+// Fetch all products with their associated user data
 exports.getProducts = (req, res, next) => {
   Product.findAll({
-    include: [
-      {
-        model: User,
-        required: false,
-      },
-    ],
+    include: [{ model: User, required: false }],
   })
     .then(products => {
       res.render('shop/product-list', {
@@ -18,12 +14,10 @@ exports.getProducts = (req, res, next) => {
         path: '/products',
       });
     })
-    .catch(err => {
-      console.log(err);
-      next(err);
-    });
+    .catch(err => next(err));
 };
 
+// Get single product details
 exports.getProduct = (req, res, next) => {
   const prodId = req.params.productId;
   Product.findByPk(prodId)
@@ -34,9 +28,7 @@ exports.getProduct = (req, res, next) => {
         path: '/products',
       });
     })
-    .catch(err => {
-      console.log(err);
-    });
+    .catch(err => next(err));
 };
 
 exports.getIndex = (req, res, next) => {
@@ -76,6 +68,7 @@ exports.getCart = (req, res, next) => {
     });
 };
 
+// Handle adding products to cart with quantity management
 exports.postCart = (req, res, next) => {
   const prodId = req.body.productId;
   let fetchedCart;
@@ -86,33 +79,27 @@ exports.postCart = (req, res, next) => {
     .getCart()
     .then(cart => {
       fetchedCart = cart;
+      // Check if product already exists in cart
       return cart.getProducts({ where: { id: prodId } });
     })
     .then(products => {
-      // Check if product exists in cart
       if (products.length > 0) {
+        // If product exists, increment quantity
         productToAdd = products[0];
-        // Increment existing quantity
         newQuantity = productToAdd.cartItem.quantity + 1;
         return productToAdd;
       }
-      // If product not in cart, fetch it from database
+      // If product doesn't exist, fetch it from database
       return Product.findByPk(prodId);
     })
     .then(product => {
       productToAdd = product;
-      // Add/update product in cart with new quantity
       return fetchedCart.addProduct(productToAdd, {
         through: { quantity: newQuantity },
       });
     })
-    .then(() => {
-      res.redirect('/cart');
-    })
-    .catch(err => {
-      console.log(err);
-      next(err); // Pass error to error handling middleware
-    });
+    .then(() => res.redirect('/cart'))
+    .catch(err => next(err));
 };
 
 exports.postDeleteCartProduct = (req, res, next) => {
@@ -151,6 +138,7 @@ exports.getOrders = (req, res, next) => {
     });
 };
 
+// Create order from cart items
 exports.postOrder = (req, res, next) => {
   let fetchedCart;
   req.user
@@ -163,24 +151,17 @@ exports.postOrder = (req, res, next) => {
       return req.user
         .createOrder()
         .then(order => {
+          // Transform cart items into order items with quantities
           const updatedProducts = products.map(product => {
             product.orderItem = { quantity: product.cartItem.quantity };
             return product;
           });
           return order.addProducts(updatedProducts);
         })
-        .then(result => {
-          // Empty the cart after order is created
-          return fetchedCart.setProducts(null);
-        });
+        .then(() => fetchedCart.setProducts(null)); // Empty cart after order creation
     })
-    .then(() => {
-      res.redirect('/orders');
-    })
-    .catch(err => {
-      console.log(err);
-      next(err);
-    });
+    .then(() => res.redirect('/orders'))
+    .catch(err => next(err));
 };
 
 exports.getCheckout = (req, res, next) => {
