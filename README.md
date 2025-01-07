@@ -12,10 +12,10 @@
 - ✅ Dynamic Product Management
 - ✅ Shopping Cart Functionality
 - ✅ SQL Integration (MySQL)
+- ✅ Sequelize ORM
 
 ### 🔜 Coming Soon
 
-- Sequelize ORM
 - MongoDB Integration
 - Mongoose ODM
 - User Authentication
