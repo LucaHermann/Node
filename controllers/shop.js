@@ -7,7 +7,7 @@ exports.getProducts = (req, res, next) => {
     include: [
       {
         model: User,
-        required: true,
+        required: false,
       },
     ],
   })
@@ -20,6 +20,7 @@ exports.getProducts = (req, res, next) => {
     })
     .catch(err => {
       console.log(err);
+      next(err);
     });
 };
 
@@ -123,13 +124,14 @@ exports.postDeleteCartProduct = (req, res, next) => {
     })
     .then(products => {
       const product = products[0];
-      return product.destroy();
+      return product.cartItem.destroy();
     })
     .then(() => {
       res.redirect('/cart');
     })
     .catch(err => {
       console.log(err);
+      next(err);
     });
 };
 
